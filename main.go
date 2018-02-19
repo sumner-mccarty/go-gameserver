@@ -44,7 +44,7 @@ func logEverythingPOST(ctx *web.Context, val string) string {
 
 func main() {
 
-	db, err := gorm.Open("mysql", "fbg:firebrand@fbgdb.car3xz0htwap.us-east-1.rds.amazonaws.com/gamedb?charset=utf8&parseTime=True&loc=Local")
+	db, err := gorm.Open("mysql", "fbg:firebrand@tcp(fbgdb.car3xz0htwap.us-east-1.rds.amazonaws.com:3306)/gamedb?charset=utf8&parseTime=True&loc=Local")
 	if (err != nil){
 		fmt.Println("ERROR: " + err.Error());
 	}

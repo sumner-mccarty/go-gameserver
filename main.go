@@ -60,7 +60,21 @@ func main() {
 
 	// Migrate the schema
 	db.AutoMigrate(&User{})
+	
+	// Create
+	db.Create(&User{UID: "ABCDEFG", Name: "Bryan", NumSessions: 7})
+	
+	// Read
+	var user User
+	db.First(&user, "uid = ?", "ABCDEFG") // find uses the db syntax uid vs UID
 
+	// Update - update user's num_sessions to 8
+	db.Model(&user).Update("NumSessions", 8)
+
+	// Delete - delete product
+	//db.Delete(&product)
+
+	
     //web.Get("/(.*)", logEverythingGET)
     //web.Post("/(.*)", logEverythingPOST)
     //web.Run("0.0.0.0:3000")

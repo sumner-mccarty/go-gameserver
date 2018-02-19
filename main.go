@@ -8,6 +8,30 @@ import (
 		 _ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
+func main() {
+
+	// Working DB connection and gorm helper
+	//testDbAbility()
+	
+	// TODO: add the real API's vs the current loggers
+	setupAPIs()
+	
+	// NOTE: this could be called via a goroutine if we wish it to not block (like if we need to init a second blocking listener)
+	startWebServer()
+}
+
+
+func setupAPIs() {
+	web.Get("/(.*)", logEverythingGET)
+    web.Post("/(.*)", logEverythingPOST)
+	
+	// TODO: real APIs/func's 
+}
+
+func startWebServer(conn string) {
+	web.Run(conn) // BLOCKING CALL
+}
+
 func logEverythingGET(ctx *web.Context, val string) string {
 
         var buffer bytes.Buffer
@@ -41,7 +65,11 @@ func logEverythingPOST(ctx *web.Context, val string) string {
         return buffer.String()
 }
 
+///////////////////////////
+// DB RELATED
+//////////////////////////
 
+// Define Schema here as Structs
 type User struct {
   gorm.Model
   
@@ -50,15 +78,14 @@ type User struct {
   NumSessions	uint
 }
 
-func main() {
-
+func testDbAbility() {
 	db, err := gorm.Open("mysql", "fbg:firebrand@tcp(fbgdb.car3xz0htwap.us-east-1.rds.amazonaws.com:3306)/gamedb?charset=utf8&parseTime=True&loc=Local")
 	if (err != nil){
 		fmt.Println("ERROR: " + err.Error());
 	}
 	defer db.Close()
 
-	// Migrate the schema
+	// Migrate the schema  (creates a users table following ruby db naming conventions)
 	db.AutoMigrate(&User{})
 	
 	// Create
@@ -71,12 +98,6 @@ func main() {
 	// Update - update user's num_sessions to 8
 	db.Model(&user).Update("NumSessions", 8)
 
-	// Delete - delete product
-	//db.Delete(&product)
-
-	
-    //web.Get("/(.*)", logEverythingGET)
-    //web.Post("/(.*)", logEverythingPOST)
-    //web.Run("0.0.0.0:3000")
+	// Delete - delete u
+	//db.Delete(&user)
 }
-

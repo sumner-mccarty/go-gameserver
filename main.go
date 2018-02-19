@@ -42,6 +42,14 @@ func logEverythingPOST(ctx *web.Context, val string) string {
 }
 
 
+type User struct {
+  gorm.Model
+  
+  UID 			string
+  Name 			string
+  NumSessions	uint
+}
+
 func main() {
 
 	db, err := gorm.Open("mysql", "fbg:firebrand@tcp(fbgdb.car3xz0htwap.us-east-1.rds.amazonaws.com:3306)/gamedb?charset=utf8&parseTime=True&loc=Local")
@@ -50,9 +58,11 @@ func main() {
 	}
 	defer db.Close()
 
+	// Migrate the schema
+	db.AutoMigrate(&User{})
 
-    web.Get("/(.*)", logEverythingGET)
-    web.Post("/(.*)", logEverythingPOST)
-    web.Run("0.0.0.0:3000")
+    //web.Get("/(.*)", logEverythingGET)
+    //web.Post("/(.*)", logEverythingPOST)
+    //web.Run("0.0.0.0:3000")
 }
 

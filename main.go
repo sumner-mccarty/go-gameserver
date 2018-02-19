@@ -4,6 +4,8 @@ import (
         "fmt"
         "bytes"
         "github.com/hoisie/web"
+		"github.com/jinzhu/gorm"
+		 _ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 func logEverythingGET(ctx *web.Context, val string) string {
@@ -41,6 +43,14 @@ func logEverythingPOST(ctx *web.Context, val string) string {
 
 
 func main() {
+
+	db, err := gorm.Open("mysql", "fbg:firebrand@fbgdb.car3xz0htwap.us-east-1.rds.amazonaws.com:3306/gamedb?charset=utf8&parseTime=True&loc=Local")
+	if (err != nil){
+		fmt.Println("ERROR: " + err.Error());
+	}
+	defer db.Close()
+
+
     web.Get("/(.*)", logEverythingGET)
     web.Post("/(.*)", logEverythingPOST)
     web.Run("0.0.0.0:3000")

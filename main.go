@@ -17,7 +17,7 @@ func main() {
 	setupAPIs()
 	
 	// NOTE: this could be called via a goroutine if we wish it to not block (like if we need to init a second blocking listener)
-	startWebServer()
+	startWebServer("0.0.0.0:3000")
 }
 
 

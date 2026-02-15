@@ -3,6 +3,7 @@
 *.dll
 *.so
 *.dylib
+gameserver
 
 # Test binary, build with `go test -c`
 *.test
@@ -12,3 +13,19 @@
 
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/
+
+# SQLite database files
+*.db
+
+# Terraform state (do not commit)
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+terraform.tfvars
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo

@@ -1,0 +1,86 @@
+services:
+  # ---- Development: SQLite (zero config) ----
+  # Run: docker compose up gameserver-dev
+  gameserver-dev:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      SERVER_HOST: "0.0.0.0"
+      SERVER_PORT: "3000"
+      DB_DRIVER: "sqlite"
+      DB_DSN: "/data/gameserver.db"
+    volumes:
+      - sqlite-data:/data
+
+  # ---- Production: PostgreSQL ----
+  # Run: docker compose --profile production up
+  postgres:
+    image: postgres:16-alpine
+    profiles: ["production"]
+    environment:
+      POSTGRES_USER: gameserver
+      POSTGRES_PASSWORD: gameserver
+      POSTGRES_DB: gameserver
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gameserver"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  gameserver-prod:
+    build: .
+    profiles: ["production"]
+    ports:
+      - "3000:3000"
+    environment:
+      SERVER_HOST: "0.0.0.0"
+      SERVER_PORT: "3000"
+      DB_DRIVER: "postgres"
+      DB_DSN: "host=postgres user=gameserver password=gameserver dbname=gameserver port=5432 sslmode=disable"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # ---- Production: MySQL ----
+  # Run: docker compose --profile mysql up
+  mysql:
+    image: mysql:8.0
+    profiles: ["mysql"]
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: gameserver
+      MYSQL_USER: gameserver
+      MYSQL_PASSWORD: gameserver
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  gameserver-mysql:
+    build: .
+    profiles: ["mysql"]
+    ports:
+      - "3000:3000"
+    environment:
+      SERVER_HOST: "0.0.0.0"
+      SERVER_PORT: "3000"
+      DB_DRIVER: "mysql"
+      DB_DSN: "gameserver:gameserver@tcp(mysql:3306)/gameserver?charset=utf8mb4&parseTime=True&loc=Local"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+volumes:
+  sqlite-data:
+  postgres-data:
+  mysql-data:

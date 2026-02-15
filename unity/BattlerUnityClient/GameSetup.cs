@@ -322,17 +322,20 @@ namespace BattlerUnityClient
             // Update session to active
             yield return _client.UpdateSessionStatus(_currentSessionId, "active", (s, err) => { });
 
-            // Generate opponent army
+            // Generate opponent army — deploy in right 20% of the field
+            float deployMargin = 2f;
+            float enemyXMin = FieldWidth * 0.8f;
+            float enemyXMax = FieldWidth - deployMargin;
             List<ArmyUnitPlacement> opponentArmy;
             if (PlayVsNPC)
             {
-                opponentArmy = _battleManager.GenerateRandomArmy(80f, 98f, 2f, FieldDepth - 2f, ArmyBudget);
+                opponentArmy = _battleManager.GenerateRandomArmy(enemyXMin, enemyXMax, deployMargin, FieldDepth - deployMargin, ArmyBudget);
             }
             else
             {
                 // In PvP, the other player would submit their army too
                 // For now, generate a random one as placeholder
-                opponentArmy = _battleManager.GenerateRandomArmy(80f, 98f, 2f, FieldDepth - 2f, ArmyBudget);
+                opponentArmy = _battleManager.GenerateRandomArmy(enemyXMin, enemyXMax, deployMargin, FieldDepth - deployMargin, ArmyBudget);
             }
 
             // Send start battle request

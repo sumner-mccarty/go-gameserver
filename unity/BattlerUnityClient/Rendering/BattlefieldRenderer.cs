@@ -25,6 +25,7 @@ namespace BattlerUnityClient
         public float HealthBarHeight = 1.5f;
         public float HealthBarWidth = 0.8f;
         public float UnitInterpolationSpeed = 10f;
+        public float DeathEffectDuration = 0.1f;
 
         private Transform _terrainParent;
         private Transform _unitsParent;
@@ -261,7 +262,7 @@ namespace BattlerUnityClient
             if (_unitObjects.TryGetValue(unitId, out var obj))
             {
                 // Simple death effect: scale down
-                Destroy(obj, 0.1f);
+                Destroy(obj, DeathEffectDuration);
                 _unitObjects.Remove(unitId);
             }
             if (_healthBarObjects.TryGetValue(unitId, out var hb))

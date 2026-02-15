@@ -109,8 +109,8 @@ namespace ChessUnityClient
                         }
                         else
                         {
-                            // Smoothly move to position
-                            obj.transform.position = Vector3.Lerp(obj.transform.position, worldPos, 0.3f);
+                            // Smoothly move to position (frame-rate independent)
+                            obj.transform.position = Vector3.Lerp(obj.transform.position, worldPos, Time.deltaTime * 8f);
                         }
                     }
                     else

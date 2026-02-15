@@ -101,15 +101,17 @@ namespace BattlerUnityClient
 
         private void StartReceiveLoop()
         {
-            Task.Run(async () =>
+            try
             {
-                var buffer = new byte[8192];
-                try
+                Task.Run(async () =>
                 {
-                    while (_ws.State == WebSocketState.Open && !_cts.Token.IsCancellationRequested)
+                    var buffer = new byte[8192];
+                    try
                     {
-                        var result = await _ws.ReceiveAsync(
-                            new ArraySegment<byte>(buffer), _cts.Token);
+                        while (_ws.State == WebSocketState.Open && !_cts.Token.IsCancellationRequested)
+                        {
+                            var result = await _ws.ReceiveAsync(
+                                new ArraySegment<byte>(buffer), _cts.Token);
 
                         if (result.MessageType == WebSocketMessageType.Close)
                         {
@@ -128,7 +130,12 @@ namespace BattlerUnityClient
                 {
                     lock (_queueLock) { _messageQueue.Enqueue("__ERROR__" + e.Message); }
                 }
-            });
+                });
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[BattlerUnityClient] Failed to start receive loop: {e.Message}");
+            }
         }
 
         void Update()

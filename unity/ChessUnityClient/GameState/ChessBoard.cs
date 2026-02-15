@@ -159,9 +159,9 @@ namespace ChessUnityClient
                     }
                 }
             }
-            catch
+            catch (System.Exception e)
             {
-                // Fallback: try simple manual parse
+                Debug.LogWarning($"[ChessBoard] Board parse fallback: {e.Message}");
                 ParseBoardManual(boardJson);
             }
         }

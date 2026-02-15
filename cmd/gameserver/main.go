@@ -1,6 +1,3 @@
-// Package main is the entry point for the gameserver.
-// The actual server logic is in cmd/gameserver/main.go.
-// Run with: go run ./cmd/gameserver
 package main
 
 import (

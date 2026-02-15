@@ -11,6 +11,7 @@ A production-ready, cloud-scalable game server written in Go. Features player ma
 - **AWS deployment ready** — Terraform configs for ECS Fargate with auto-scaling
 - **Comprehensive tests** — 47 tests covering services, handlers, middleware, config, and store
 - **Game development guide** — step-by-step tutorials for building [chess](#game-development-guide) and [Mechabellum-style RTS](#game-development-guide) servers
+- **Drop-in Unity clients** — complete [ChessUnityClient](unity/ChessUnityClient/) and [BattlerUnityClient](unity/BattlerUnityClient/) libraries (drag one script onto a GameObject and play)
 
 ## Game Development Guide
 
@@ -20,6 +21,18 @@ Want to build a game-specific server? See **[docs/GAME_DEVELOPMENT_GUIDE.md](doc
 - **Example 2: Mechabellum-Style RTS** — real-time game loop (20 ticks/sec), unit types with different speeds/weapons/trajectories, projectile physics, WebSocket streaming
 - **Unity Integration** — C# client examples for both turn-based and real-time games
 - **Architecture Patterns** — server-authoritative design where all gameplay runs on the server and Unity is a visual renderer
+
+## Unity Client Libraries
+
+Two drop-in Unity libraries are included. See **[unity/README.md](unity/README.md)** for full documentation.
+
+| Library | Game Type | Protocol | Entry Point |
+|---------|-----------|----------|-------------|
+| [ChessUnityClient](unity/ChessUnityClient/) | Turn-based chess | HTTP polling | `GameSetup.cs` |
+| [BattlerUnityClient](unity/BattlerUnityClient/) | Mechabellum-style RTS | WebSocket streaming | `GameSetup.cs` |
+
+**Quick start:** Copy a client folder into `Assets/`, drag `GameSetup.cs` onto a GameObject, hit Play.
+All 3D assets and UI are generated procedurally — replace them with your own prefabs at any time.
 
 ## Quick Start
 
@@ -190,6 +203,10 @@ go test -cover ./...
 │   ├── model/            # Data models (Player, GameSession)
 │   ├── service/          # Business logic layer
 │   └── store/            # Database connection and migrations
+├── unity/
+│   ├── ChessUnityClient/ # Drop-in Unity chess client library
+│   ├── BattlerUnityClient/ # Drop-in Unity battler client library
+│   └── README.md         # Unity client documentation
 ├── deploy/
 │   └── aws/              # Terraform configs for AWS ECS Fargate
 ├── docs/

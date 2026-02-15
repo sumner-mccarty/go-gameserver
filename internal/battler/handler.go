@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
+	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
@@ -17,12 +19,31 @@ type Handler struct {
 }
 
 // NewHandler creates a new battler handler.
+// Set the WS_ALLOWED_ORIGINS environment variable to a comma-separated list of
+// allowed origins (e.g. "http://localhost:3000,https://mygame.com").
+// If not set, all origins are allowed (suitable for development only).
 func NewHandler(manager *Manager) *Handler {
+	allowedOrigins := os.Getenv("WS_ALLOWED_ORIGINS")
 	return &Handler{
 		manager: manager,
 		upgrader: websocket.Upgrader{
-			CheckOrigin: func(r *http.Request) bool { return true },
+			CheckOrigin: makeOriginChecker(allowedOrigins),
 		},
+	}
+}
+
+// makeOriginChecker returns a function that validates WebSocket origins.
+func makeOriginChecker(allowedOrigins string) func(r *http.Request) bool {
+	if allowedOrigins == "" {
+		return func(r *http.Request) bool { return true }
+	}
+	origins := map[string]bool{}
+	for _, o := range strings.Split(allowedOrigins, ",") {
+		origins[strings.TrimSpace(o)] = true
+	}
+	return func(r *http.Request) bool {
+		origin := r.Header.Get("Origin")
+		return origins[origin]
 	}
 }
 

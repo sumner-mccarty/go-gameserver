@@ -189,7 +189,10 @@ type GameResponse struct {
 
 // ToResponse converts a Game to a GameResponse (for JSON serialization).
 func (g *Game) ToResponse() GameResponse {
-	historyJSON, _ := json.Marshal(g.MoveHistory)
+	historyJSON, err := json.Marshal(g.MoveHistory)
+	if err != nil {
+		historyJSON = []byte("[]")
+	}
 	return GameResponse{
 		ID:              g.ID,
 		SessionID:       g.SessionID,

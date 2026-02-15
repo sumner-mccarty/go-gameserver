@@ -102,7 +102,10 @@ func ColorOf(piece string) string {
 
 // ToJSON serializes the board to a JSON string (8-element array of 8-element arrays).
 func (b *Board) ToJSON() string {
-	data, _ := json.Marshal(b)
+	data, err := json.Marshal(b)
+	if err != nil {
+		return "[]"
+	}
 	return string(data)
 }
 

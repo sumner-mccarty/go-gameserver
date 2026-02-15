@@ -10,6 +10,16 @@ A production-ready, cloud-scalable game server written in Go. Features player ma
 - **Docker & Docker Compose** — one command to run locally or with PostgreSQL
 - **AWS deployment ready** — Terraform configs for ECS Fargate with auto-scaling
 - **Comprehensive tests** — 47 tests covering services, handlers, middleware, config, and store
+- **Game development guide** — step-by-step tutorials for building [chess](#game-development-guide) and [Mechabellum-style RTS](#game-development-guide) servers
+
+## Game Development Guide
+
+Want to build a game-specific server? See **[docs/GAME_DEVELOPMENT_GUIDE.md](docs/GAME_DEVELOPMENT_GUIDE.md)** for complete tutorials:
+
+- **Example 1: Chess Server** — turn-based, HTTP REST, board state management, full move lifecycle
+- **Example 2: Mechabellum-Style RTS** — real-time game loop (20 ticks/sec), unit types with different speeds/weapons/trajectories, projectile physics, WebSocket streaming
+- **Unity Integration** — C# client examples for both turn-based and real-time games
+- **Architecture Patterns** — server-authoritative design where all gameplay runs on the server and Unity is a visual renderer
 
 ## Quick Start
 
@@ -182,6 +192,8 @@ go test -cover ./...
 │   └── store/            # Database connection and migrations
 ├── deploy/
 │   └── aws/              # Terraform configs for AWS ECS Fargate
+├── docs/
+│   └── GAME_DEVELOPMENT_GUIDE.md  # Tutorials for chess & RTS game servers
 ├── main.go               # Root entry point (same as cmd/gameserver)
 ├── Dockerfile            # Multi-stage Docker build
 ├── docker-compose.yml    # Dev and production compose configs
